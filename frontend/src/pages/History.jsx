@@ -1,4 +1,3 @@
-// src/pages/History.jsx
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useDiaryStore from "../stores/diaryStore";
@@ -9,17 +8,35 @@ export default function History() {
   const deleteEntry = useDiaryStore((s) => s.deleteEntry);
   const navigate = useNavigate();
 
-  // Calendar와 동일한 색 결정 로직
-  const colorFor = (emotions) => {
-    if (!emotions || emotions.length === 0) return "#ddd";
-    // 최고 점수 감정 하나를 꺼내서
-    const top = emotions.reduce((a, b) => (b.score > a.score ? b : a));
-    const label = top.label;
-    if (label.includes("기쁨") || label.includes("행복")) return "#FFD700";
-    if (label.includes("분노") || label.includes("화남")) return "#FF4500";
-    if (label.includes("슬픔") || label.includes("우울")) return "#1E90FF";
-    // 그 외
-    return "#A9A9A9";
+  // 6대 기본 감정별 컬러맵 (영어 key)
+  const COLOR_MAP = {
+    Joy:      "#FFD54F",
+    Sadness:  "#1E90FF",
+    Anger:    "#FF4500",
+    Fear:     "#9575CD",
+    Surprise: "#FFB74D",
+    Calm:     "#AED581",
+  };
+
+  // 한글 레이블 → 영어 매핑
+  const TRANSLATE = {
+    기쁨: "Joy",
+    행복: "Joy",
+    슬픔: "Sadness",
+    우울: "Sadness",
+    분노: "Anger",
+    화남: "Anger",
+    불안: "Fear",
+    긴장: "Fear",
+    놀람: "Surprise",
+    평온: "Calm",
+  };
+
+  // dominantEmotion(한글) → 배경색 계산
+  const colorFor = (dominant) => {
+    if (!dominant) return "#DDD";
+    const eng = TRANSLATE[dominant] || dominant;      // 한글 → 영어
+    return COLOR_MAP[eng] || "#DDD";                 // 영어 → 색
   };
 
   // 날짜 역순 정렬
@@ -32,7 +49,7 @@ export default function History() {
       <h2>📦 일기 기록</h2>
       <ul className="history-list">
         {sorted.map(([date, entry]) => {
-          const bg = colorFor(entry.emotions);
+          const bg = colorFor(entry.dominantEmotion);
           return (
             <li
               key={date}
@@ -43,13 +60,7 @@ export default function History() {
                 {date} – {entry.title || "제목 없음"}
               </Link>
               <div className="history-buttons">
-                <button
-                  onClick={() => {
-                    deleteEntry(date);
-                  }}
-                >
-                  삭제
-                </button>
+                <button onClick={() => deleteEntry(date)}>삭제</button>
                 <button onClick={() => navigate(`/edit/${date}`)}>
                   수정
                 </button>
