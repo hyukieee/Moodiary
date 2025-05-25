@@ -29,7 +29,7 @@ export default function Calendar() {
     Sadness:  "#1E90FF",
     Anger:    "#FF4500",
     Fear:     "#9575CD",
-    Surprise: "#FFB74D",
+    Surprise: "#FF7F00",
     Calm:     "#AED581",
   };
 
