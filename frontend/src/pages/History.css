@@ -1,0 +1,38 @@
+.history-page {
+    padding: 2rem;
+  }
+  
+  .history-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    margin-bottom: 0.75rem;
+    border-radius: 8px;
+  }
+  
+  .history-link {
+    text-decoration: none;
+    font-weight: bold;
+    color: inherit; /* 배경색 대비 검정 글씨 유지 */
+  }
+  
+  .history-buttons button {
+    margin-left: 0.5rem;
+    padding: 0.25rem 0.6rem;
+    border: none;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .history-buttons button:hover {
+    background: rgba(0, 0, 0, 0.2);
+  }
+  

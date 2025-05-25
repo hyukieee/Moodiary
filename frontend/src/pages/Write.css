@@ -1,0 +1,51 @@
+/* frontend/src/pages/Write.css */
+
+.write-page {
+    max-width: 90vw;      /* 최대 너비를 지정 */
+    margin: 2rem auto;     /* 위아래 여백 + 가운데 정렬 */
+    padding: 1rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .write-page > h2 {
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    text-align: center;
+  }
+  
+  .write-form label {
+    display: block;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+  
+  .write-form input,
+  .write-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 0.25rem;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .write-form button {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    margin-top: 1rem;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .write-form button:hover {
+    background-color: #357ab8;
+  }
+  

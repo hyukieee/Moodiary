@@ -1,0 +1,52 @@
+/* frontend/src/components/DiaryApp.css */
+
+.app-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: #f9f9f9;
+  }
+  
+  .app-header {
+    background: #a2cce3;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+  }
+  
+  .app-nav {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .app-nav .sep {
+    margin: 0 0.5rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .app-nav a {
+    color: white;
+    text-decoration: none;
+  }
+  
+  .app-nav a:hover {
+    text-decoration: underline;
+  }
+  
+  .app-main {
+    flex: 1;
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .app-footer {
+    text-align: center;
+    padding: 1rem;
+    background: #ececec;
+    color: #666;
+  }
+  

@@ -1,0 +1,42 @@
+/* frontend/src/components/EmotionChart.css */
+
+.emotion-chart {
+    margin: 2rem 0;
+  }
+  .emotion-chart h3 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+  }
+  
+  .emotion-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  
+  .emotion-label {
+    width: 90px;            /* 레이블 영역 너비 조정 */
+    font-weight: 500;
+  }
+  
+  .bar-container {
+    flex: 1;
+    background: #eee;
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 0 0.75rem;
+  }
+  
+  .bar-fill {
+    height: 100%;
+    background: #4a90e2;
+    border-radius: 6px 0 0 6px;
+  }
+  
+  .emotion-value {
+    width: 40px;            /* 점수 표시 영역 */
+    text-align: right;
+    font-size: 0.9rem;
+  }
+  

@@ -1,0 +1,38 @@
+/* frontend/src/pages/Calendar.css */
+.calendar-container {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .calendar-header h2 {
+    margin: 0;
+  }
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+  .calendar-weekday {
+    font-weight: bold;
+    padding: 8px 0;
+    background: #f0f0f0;
+  }
+  .calendar-cell {
+    height: 60px;
+    line-height: 60px;
+    border-radius: 4px;
+    color: #333;
+    font-size: 0.9rem;
+    user-select: none;
+  }
+  .calendar-cell-link {
+    text-decoration: none;
+  }
+  
