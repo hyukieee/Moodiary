@@ -40,6 +40,7 @@ export default async function handler(req, res) {
 1) 핵심 키워드 3개
 2) 문장 단위 분석 → [{ sentence, emotion, reason }, …]
 3) 감정별 score 계산 → emotions 배열 (소수 둘째 자리 반올림, 내림차순), 한글로 작성
+      예시: [{ label: "기쁨", score: 0.85 }, { label: "슬픔", score: 0.15 }]
 4) 감정 흐름 emojiFlow (5개) , 각 emoji와 해당 문장, 문장은 한글로 작성
 5) highlights (3~5문장)
 6) recap (한 문장)
