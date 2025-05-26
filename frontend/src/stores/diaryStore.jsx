@@ -1,5 +1,5 @@
-// frontend/src/stores/diaryStore.jsx
-import { create } from "zustand";
+// src/stores/diaryStore.js
+import create from "zustand";
 import { persist } from "zustand/middleware";
 
 const useDiaryStore = create(
@@ -8,25 +8,22 @@ const useDiaryStore = create(
       entries: {},
 
       addEntry: (date, data) =>
-        set((state) => ({
-          entries: { ...state.entries, [date]: data },
-        })),
+        set((s) => ({ entries: { ...s.entries, [date]: data } })),
 
       updateEntry: (date, data) =>
-        set((state) => ({
-          entries: { ...state.entries, [date]: data },
-        })),
+        set((s) => ({ entries: { ...s.entries, [date]: data } })),
 
-      removeEntry: (date) =>
-        set((state) => {
-          const e = { ...state.entries };
-          delete e[date];
-          return { entries: e };
+      deleteEntry: (date) =>
+        set((s) => {
+          // 원본을 건드리지 않고 복사본으로 삭제
+          const next = { ...s.entries };
+          delete next[date];
+          return { entries: next };
         }),
-
-      clearAll: () => set({ entries: {} }),
     }),
-    { name: "diary-storage" }
+    {
+      name: "diary-storage", // localStorage key
+    }
   )
 );
 

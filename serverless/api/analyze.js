@@ -5,7 +5,6 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
-    // 헬스체크용
     return res.status(200).json({ ok: true });
   }
   if (req.method !== "POST") {
@@ -19,76 +18,70 @@ export default async function handler(req, res) {
       .json({ error: "Both `date` and `diaryText` are required." });
   }
 
-  // GPT 프롬프트: 순수 JSON만 반환하도록 코드펜스 제거
-  const prompt = `
-  다음 일기를 분석해 순수 JSON만 반환해주세요.
-  
-  날짜: ${date}
-  제목: ${title}
-  내용: """${diaryText}"""
-  
-  1) 이 일기의 핵심 키워드 3개를 뽑고 (예: 자연, 설렘, 도전)
-  2) 문장 단위로 분할한 뒤, 각 문장마다 해당되는 감정(label: 기쁨, 슬픔, 분노, 불안, 놀람, 평온)과
-     “그 이유가 되는 핵심 키워드”를 [{ sentence, emotion, reason }, …] 형태로 알려주세요.
-  3) 총 문장 수 대비 각 감정이 등장한 횟수로 점수(score)를 계산하세요.
-     - score = (등장횟수 ÷ 총 문장 수), 0~1 사이, 소수 둘째 자리 반올림
-     - 6가지 감정 모두 포함하여 내림차순 정렬 후 "emotions" 배열로 출력
-  4) **감정 흐름을 나타내는 이모지+설명 5개**  
-     - 산책하면 🚶, 공연/연주하면 🎻(또는 🎹), 식사하면 🍽️, 휴식하면 🛋️ 등  
-     - 그 순간에 했던 **행동 또는 느낌**을 한두 단어로 텍스트로 달기  
-  5) 하이라이트(3~5문장)  
-  6) 리캡(한 문장 요약)  
-  7) **일기에서 뽑은 핵심 키워드를 바탕으로**, **실제 존재하는** 다음 베스트셀러·대표작 콘텐츠를 추천해 주세요.  
-     • 책 2권 — 반드시 일기 키워드와 연관된 주제/장르, 그리고 실제로 출판된 책만  
-     • 영화 2편 — 반드시 일기 키워드와 연관된 주제/장르, 그리고 실제로 개봉된 영화만  
-     • 음악 2곡 — 반드시 일기 키워드와 연관된 분위기/테마, 그리고 실제로 발매된 곡만  
-     - 추천할 때 절대 “존재하지 않는” 가짜 제목을 만들어내지 말 것.
-   - 반드시 **실제 메타데이터 API**(Google Books, TMDB, Spotify) 상위 3개 결과 중 하나를 골라서 제목·저자·감독·아티스트 정보를 내려줄 것.
-  8) 이 일기의 전체적인 **대표 감정**을 “Joy, Sadness, Anger, Fear, Surprise, Calm” 중 하나만 골라서 dominantEmotion 필드로 내려주세요.
-  
-  반드시 아래 스키마만 순수 JSON으로 출력(허구의 제목은 절대 포함 금지):
-  {
-    "keywords": ["자연", "여유", "웃음"],
-    "emotions": [
-      { "label": "슬픔 😢", "score": 0.50 },
-      { "label": "실망 😔", "score": 0.40 },
-      …
-    ],
-    "emojiFlow": [
-      { "emoji": "🤯", "text": "과제가 많아 머리가 복잡" },
-      { "emoji": "😊", "text": "친구들 만나서 행복" },
-      …
-    ],
-    "highlights": ["첫 번째 핵심 문장...", "두 번째 핵심 문장...", …],
-    "recap": "오늘은 …",
-    "recommendations": {
-      "books": [
-        { "title":"실제 도서명", "author":"실제 저자명", "reason":"…" },
-        …
-      ],
-      "movies": [
-        { "title":"실제 영화명", "director":"실제 감독명", "reason":"…" },
-        …
-      ],
-      "music": [
-        { "title":"실제 곡명", "artist":"실제 아티스트명", "reason":"…" },
-        …
-      ]
+  // GPT에 보낼 메시지 구성: system + user
+  const messages = [
+    {
+      role: "system",
+      content: "당신은 JSON 생성기입니다. 절대 코드펜스나 마크다운을 사용하지 말고, 설명 문구 없이 오직 하나의 JSON 객체만 반환하세요."
     },
-    "dominantEmotion": "Sadness"
-  }
-  `.trim();
+    {
+      role: "system",
+      content: "반드시 출력된 텍스트는 순수 JSON이어야 하며, 백틱(`)이나 여백, 주석 없이 정확한 JSON 형식을 유지해야 합니다."
+    },
+    {
+      role: "user",
+      content:
+        `다음 일기를 분석해 순수 JSON만 반환해주세요.
+
+날짜: ${date}
+제목: ${title || ""}
+내용: """${diaryText}"""
+
+1) 핵심 키워드 3개
+2) 문장 단위 분석 → [{ sentence, emotion, reason }, …]
+3) 감정별 score 계산 → emotions 배열 (소수 둘째 자리 반올림, 내림차순), 한글로 작성
+4) 감정 흐름 emojiFlow (5개) , 각 emoji와 해당 문장, 문장은 한글로 작성
+5) highlights (3~5문장)
+6) recap (한 문장)
+7) 실제 존재하는 다음 추천 (API 메타데이터 포함)
+    - 주제와 관련된 것들 중 책은 베스트 셀러, 영화는 관객수가 많은, 음악은 유명한 곡을 추천할 것
+    - 실제로 존재하는 콘텐츠만 추천하고, 지어내지 말 것
+    • 책, 영화는 각각 한국 콘텐츠 1개 이상 추천
+   • books (2) → { title, author, isbn, reason }
+   • movies (2) → { title, director, tmdb_id, reason }
+   • music (2) → { title, artist, spotify_id, reason }
+8) dominantEmotion (Joy, Sadness, Anger, Fear, Surprise, Calm 중 하나를 선택하여 영어 그대로 반환)
+
+예시 출력 스키마:
+{
+  "keywords": ["", "", ""],
+  "emotions": [{ "label": "", "score": 0.00 }, …],
+  "emojiFlow": [{ "emoji": "", "text": "" }, …],
+  "highlights": ["", …],
+  "recap": "",
+  "recommendations": {
+    "books": [{ "title":"", "author":"", "isbn":"", "reason":"" }, …],
+    "movies": [{ "title":"", "director":"", "tmdb_id":0, "reason":"" }, …],
+    "music": [{ "title":"", "artist":"", "spotify_id":"", "reason":"" }, …]
+  },
+  "dominantEmotion": "Sadness"
+}`
+    }
+  ];
 
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo-16k",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.7,
-      max_tokens: 1000,
+      model: "gpt-4-turbo",
+      messages,
+      temperature: 0,
+      max_tokens: 1500,
     });
-    // GPT가 반환한 텍스트를 그대로 JSON.parse
-    const result = JSON.parse(completion.choices[0].message.content);
-    // diaryText와 title도 함께 반환
+
+    // 순수 JSON이므로 trim() 후 바로 파싱
+    const text = completion.choices[0].message.content.trim();
+    const result = JSON.parse(text);
+
+    // 원본 일기 데이터와 합쳐서 반환
     return res.status(200).json({ date, title, diaryText, ...result });
   } catch (err) {
     console.error("GPT ERROR:", err);

@@ -1,3 +1,4 @@
+// src/pages/History.jsx
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useDiaryStore from "../stores/diaryStore";
@@ -8,7 +9,7 @@ export default function History() {
   const deleteEntry = useDiaryStore((s) => s.deleteEntry);
   const navigate = useNavigate();
 
-  // 6대 기본 감정별 컬러맵 (영어 key)
+  // 6대 감정별 색상 맵 (영어 key)
   const COLOR_MAP = {
     Joy:      "#FFD54F",
     Sadness:  "#1E90FF",
@@ -18,28 +19,28 @@ export default function History() {
     Calm:     "#AED581",
   };
 
-  // 한글 레이블 → 영어 매핑
+  // 한글(label) → 영어 매핑
   const TRANSLATE = {
-    기쁨: "Joy",
-    행복: "Joy",
-    슬픔: "Sadness",
-    우울: "Sadness",
-    분노: "Anger",
-    화남: "Anger",
-    불안: "Fear",
-    긴장: "Fear",
-    놀람: "Surprise",
-    평온: "Calm",
+    기쁨:    "Joy",
+    행복:    "Joy",
+    슬픔:    "Sadness",
+    우울:    "Sadness",
+    분노:    "Anger",
+    화남:    "Anger",
+    불안:    "Fear",
+    긴장:    "Fear",
+    놀람:    "Surprise",
+    평온:    "Calm",
   };
 
-  // dominantEmotion(한글) → 배경색 계산
+  // dominantEmotion 한글 → 색상
   const colorFor = (dominant) => {
     if (!dominant) return "#DDD";
-    const eng = TRANSLATE[dominant] || dominant;      // 한글 → 영어
-    return COLOR_MAP[eng] || "#DDD";                 // 영어 → 색
+    const eng = TRANSLATE[dominant] || dominant; 
+    return COLOR_MAP[eng] || "#DDD";
   };
 
-  // 날짜 역순 정렬
+  // 날짜 내림차순
   const sorted = Object.entries(entries).sort((a, b) =>
     b[0].localeCompare(a[0])
   );
@@ -48,26 +49,31 @@ export default function History() {
     <div className="history-page">
       <h2>📦 일기 기록</h2>
       <ul className="history-list">
-        {sorted.map(([date, entry]) => {
-          const bg = colorFor(entry.dominantEmotion);
-          return (
-            <li
-              key={date}
-              className="history-item"
-              style={{ background: bg, color: "#000" }}
-            >
-              <Link to={`/result/${date}`} className="history-link">
-                {date} – {entry.title || "제목 없음"}
-              </Link>
-              <div className="history-buttons">
-                <button onClick={() => deleteEntry(date)}>삭제</button>
-                <button onClick={() => navigate(`/edit/${date}`)}>
-                  수정
-                </button>
-              </div>
-            </li>
-          );
-        })}
+        {sorted.map(([date, entry]) => (
+          <li
+            key={date}
+            className="history-item"
+            style={{ background: colorFor(entry.dominantEmotion), color: "#000" }}
+          >
+            <Link to={`/result/${date}`} className="history-link">
+              {date} – {entry.title || "제목 없음"}
+            </Link>
+            <div className="history-buttons">
+              <button
+                onClick={() => {
+                  deleteEntry(date);
+                  // 필요하다면 삭제 후 리다이렉트
+                  // navigate("/", { replace: true });
+                }}
+              >
+                삭제
+              </button>
+              <button onClick={() => navigate(`/edit/${date}`)}>
+                수정
+              </button>
+            </div>
+          </li>
+        ))}
       </ul>
     </div>
   );
