@@ -1,19 +1,20 @@
 /* frontend/src/pages/Write.css */
 
+/* 일기 작성 페이지 전체를 감싸는 컨테이너 */
 .write-page {
-    max-width: 90vw;      /* 최대 너비를 지정 */
-    margin: 2rem auto;     /* 위아래 여백 + 가운데 정렬 */
-    padding: 1rem;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: center;    /* 가운데 정렬 */
+    padding: 2rem 1rem;         /* 위아래 여백, 좌우 여백 */
   }
   
-  .write-page > h2 {
-    margin-bottom: 1rem;
-    font-size: 1.8rem;
-    text-align: center;
+  /* 폼 자체에 너비 제한을 걸고, 반응형으로 */
+  .write-page > div {           /* 최상위 div를 직접 타겟팅 */
+    width: 100%;
+    max-width: 1600px;           /* 원하는 최대 너비 (예: 600px) */
+    min-width: 320px;           /* 너무 작아지지 않게 최소 너비 설정 */
+    box-sizing: border-box;
   }
+  
   
   .write-form label {
     display: block;
