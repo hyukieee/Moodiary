@@ -1,42 +1,47 @@
-name: CI
+name: CI – Build & Push Docker Image
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. 소스 체크아웃
       - uses: actions/checkout@v3
 
+      # 2. Node.js 설정
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
 
+      # 3. 의존성 설치 (frontend 디렉토리에서)
       - name: Install dependencies
         working-directory: frontend
         run: npm ci
 
+      # 4. 프론트엔드 빌드
       - name: Build frontend
         working-directory: frontend
         run: npm run build
 
+      # 5. 빌드 결과물을 nginx 정적 폴더로 복사
       - name: Copy build to proxy/static
         run: |
           rm -rf proxy/static/dist
           mkdir -p proxy/static
           cp -r frontend/dist proxy/static/dist
-
+      # 6. Docker Hub 로그인 (v2 안정 태그 사용)
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # 7. Docker 이미지 빌드 & 푸시
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
