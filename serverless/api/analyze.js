@@ -39,8 +39,7 @@ export default async function handler(req, res) {
 
 1) 핵심 키워드 3개
 2) 문장 단위 분석 → [{ sentence, emotion, reason }, …]
-3) 감정별 score 계산 → emotions 배열 (소수 둘째 자리 반올림, 내림차순), 한글로 작성
-      예시: [{ label: "기쁨", score: 0.85 }, { label: "슬픔", score: 0.15 }]
+3) 감정별 score 계산 5개 → emotions 배열 (소수 둘째 자리 반올림, 내림차순), 한글로 작성
 4) 감정 흐름 emojiFlow (5개) , 각 emoji와 해당 문장, 문장은 한글로 작성
 5) highlights (3~5문장)
 6) recap (한 문장)
@@ -50,13 +49,13 @@ export default async function handler(req, res) {
    • books (2) → { title, author, isbn, reason }
    • movies (2) → { title, director, tmdb_id, reason }
    • music (2) → { title, artist, spotify_id, reason }
-8) dominantEmotion (Joy, Sadness, Anger, Fear, Surprise, Calm 중 하나를 선택하여 영어 그대로 반환)
+8) dominantEmotion [ Joy, Sadness, Anger, Fear, Surprise, Calm ]중 하나를 선택하여 영어 그대로 반환
 
 예시 출력 스키마:
 {
   "keywords": ["", "", ""],
   "emotions": [{ "label": "", "score": 0.00 }, …],
-  "emojiFlow": [{ "emoji": "", "text": "" }, …],
+  "emojiFlow": [{ "emoji": "", "text": "" }, … ],
   "highlights": ["", …],
   "recap": "",
   "recommendations": {
