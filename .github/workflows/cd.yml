@@ -39,7 +39,6 @@ jobs:
       #    actions/checkout@v4 단계에서 자동으로 워크스페이스에
       #    코드를 받아오기 때문에 ${GITHUB_WORKSPACE}를 그대로 쓰셔도 됩니다.
       - name: Deploy via docker-compose
-        working-directory: ${{ github.workspace }}
         run: |
           # 최신 이미지 받아오고
           docker-compose pull
