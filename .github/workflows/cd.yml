@@ -3,22 +3,23 @@ name: CD → Deploy on Self-Hosted Runner
 
 on:
   workflow_run:
-    workflows: ['CI → Build & Publish Docker Image']
+    workflows: ['CI – Build & Push Docker Image']
     types: 
       - completed
 
 jobs:
   deploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    # self-hosted 러너가 설치된 머신 레이블
-    runs-on: [self-hosted, linux]
+    runs-on: self-hosted
 
     steps:
+      # 1) 리포지토리 체크아웃 (기본 경로: $GITHUB_WORKSPACE 아래)
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy with Docker Compose
+      # 2) docker-compose 실행 (checkout 된 워크스페이스)
+      - name: Pull & recreate containers
+        working-directory: ${{ github.workspace }}
         run: |
-          cd ~/moodiary
-          docker-compose pull
-          docker-compose up -d --remove-orphans
+          sudo docker-compose pull
+          sudo docker-compose up -d --remove-orphans
