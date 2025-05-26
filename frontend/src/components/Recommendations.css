@@ -1,43 +1,19 @@
-/* frontend/src/components/Recommendations.css */
 .recommendations {
   margin-top: 2rem;
 }
 
-/* 기본 리스트 */
 .recommendation-list {
   list-style: none;
   padding: 0;
   margin: 0 0 2rem;
 }
 
-/* 책·영화: 세로 정렬 */
-.books .recommendation-item,
-.movies .recommendation-item {
+.recommendation-item {
   display: flex;
   align-items: flex-start;
   margin-bottom: 1.5rem;
 }
 
-/* 음악: 가로 스크롤 */
-.music {
-  overflow-x: auto;
-}
-.music {
-  padding-bottom: 0.5rem; /* 스크롤바 여유 */
-}
-.music .recommendation-list {
-  display: flex;
-  gap: 1rem;
-}
-.music-item {
-  flex: 0 0 auto;
-  width: 200px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-/* 공용 이미지 스타일 */
 .recommend-image {
   width: 120px;
   height: 180px;
@@ -47,15 +23,6 @@
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-/* 음악 전용 썸네일을 가로에 맞춤 */
-.music-image {
-  width: 100%;
-  height: auto;
-  margin-right: 0;
-  margin-bottom: 0.5rem;
-}
-
-/* 텍스트 영역 */
 .recommendation-text {
   flex: 1;
 }
@@ -77,4 +44,15 @@
   line-height: 1.4;
   color: #333;
   margin: 0.5rem 0 0;
+}
+
+/* 음악만 가로 스크롤 */
+.recommendation-list.horizontal {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+}
+
+.horizontal-item {
+  flex: 0 0 auto;
 }

@@ -8,9 +8,9 @@ export default function Recommendations({ data }) {
   const { books = [], movies = [], music = [] } = data;
   const [bookCovers, setBookCovers] = useState([]);
   const [moviePosters, setMoviePosters] = useState([]);
-  const [spInfo, setSpInfo] = useState([]);
+  const [spotifyInfo, setSpotifyInfo] = useState([]);
 
-  // 책 표지 가져오기
+  // 1) 책 표지 가져오기
   useEffect(() => {
     Promise.all(
       books.map(({ title, author }) =>
@@ -25,8 +25,8 @@ export default function Recommendations({ data }) {
     ).then(setBookCovers);
   }, [books]);
 
-  // 영화 포스터 가져오기
-  useEffect(() => { 
+  // 2) 영화 포스터 가져오기
+  useEffect(() => {
     Promise.all(
       movies.map(({ title }) =>
         axios
@@ -37,25 +37,24 @@ export default function Recommendations({ data }) {
     ).then(setMoviePosters);
   }, [movies]);
 
-  // 음악(SPOTIFY) 검색
+  // 3) 음악 (Spotify) 검색
   useEffect(() => {
     Promise.all(
       music.map(({ title, artist }) =>
         axios
           .get(
-            `/api/spotify-search?title=${encodeURIComponent(
-              title
-            )}&artist=${encodeURIComponent(artist)}`
+            `/api/spotify-search?title=${encodeURIComponent(title)}` +
+              `&artist=${encodeURIComponent(artist)}`
           )
           .then((r) => r.data)
-          .catch(() => ({ trackUrl: null, thumbnail: null }))
+          .catch(() => ({ thumbnail: null, trackUrl: null }))
       )
-    ).then(setSpInfo);
+    ).then(setSpotifyInfo);
   }, [music]);
 
   return (
     <section className="recommendations">
-      {/* 책 */}
+      {/* 📚 책 섹션 */}
       <h3>📚 책</h3>
       <ul className="recommendation-list">
         {books.map((b, i) => (
@@ -76,7 +75,7 @@ export default function Recommendations({ data }) {
         ))}
       </ul>
 
-      {/* 영화 */}
+      {/* 🎬 영화 섹션 */}
       <h3>🎬 영화</h3>
       <ul className="recommendation-list">
         {movies.map((m, i) => (
@@ -97,14 +96,14 @@ export default function Recommendations({ data }) {
         ))}
       </ul>
 
-      {/* 음악 */}
+      {/* 🎵 음악 섹션 (Spotify) */}
       <h3>🎵 음악</h3>
-      <ul className="recommendation-list horizontal-music-list">
+      <ul className="recommendation-list horizontal">
         {music.map((s, i) => {
-          const info = spInfo[i] || {};
+          const info = spotifyInfo[i] || {};
           return (
             <li key={i} className="recommendation-item horizontal-item">
-              {info.thumbnail && (
+              {info.thumbnail && info.trackUrl && (
                 <a
                   href={info.trackUrl}
                   target="_blank"
