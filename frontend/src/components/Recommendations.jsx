@@ -97,11 +97,11 @@ export default function Recommendations({ data }) {
 
       {/* 🎵 음악 */}
       <h3>🎵 음악</h3>
-      <ul className="recommendation-list horizontal">
+      <ul className="recommendation-list">
         {music.map((s, i) => {
           const info = spotifyInfo[i] || {};
           return (
-            <li key={i} className="recommendation-item horizontal-item">
+            <li key={i} className="recommendation-item">
               {info.thumbnail && info.trackUrl && (
                 <a
                   href={info.trackUrl}
