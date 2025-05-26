@@ -1,4 +1,4 @@
-name: CI   # ← CD의 workflows: 와 정확히 일치해야 합니다.
+name: CI
 
 on:
   push:

@@ -1,33 +1,28 @@
-# .github/workflows/cd-selfhosted.yml
 name: CD - Deploy to Self-Hosted Runner
 
 on:
   workflow_run:
-    # 반드시 CI 워크플로의 name 과 정확히 일치해야 합니다 (ASCII 하이픈 사용)
+    # CI 워크플로 이름을 정확히 그대로 적어야 합니다.
     workflows: ["CI"]
     types:
       - completed
 
 jobs:
   deploy:
-    # 라벨도 정확히 맞춰 줍니다
-    runs-on: "self-hosted"
+    # self-hosted 러너 라벨(기본값만) 지정
+    runs-on: self-hosted
 
     steps:
-      # 코드 체크아웃
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 기존 컨테이너 종료/제거
       - name: Remove old container (if any)
         run: docker rm -f nginx-proxy || true
 
-      # 최신 이미지를 Docker Hub에서 가져오기
       - name: Pull latest image
         run: docker pull hyukie/songdo:latest
 
-      # 새 컨테이너로 구동
-      - name: Start container
+      - name: Run container
         run: |
           docker run -d \
             --name nginx-proxy \
