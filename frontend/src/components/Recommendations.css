@@ -75,8 +75,8 @@
 
 /* 썸네일을 감싸는 wrapper에 정사각 비율 강제 */
 .music-image-wrapper {
-  width: 120px;   /* 원하는 크기로 조정 */
-  height: 120px;  /* width와 동일하게 맞춰야 1:1 */
+  width: 20px;   /* 원하는 크기로 조정 */
+  height: 20px;  /* width와 동일하게 맞춰야 1:1 */
   overflow: hidden;
   border-radius: 8px;
   flex-shrink: 0;
