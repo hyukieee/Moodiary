@@ -1,14 +1,15 @@
+// frontend/src/components/Recommendations.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./Recommendations.css"; // 스타일 분리
+import "./Recommendations.css";
 
 export default function Recommendations({ data }) {
   const { books = [], movies = [], music = [] } = data;
   const [bookCovers, setBookCovers] = useState([]);
   const [moviePosters, setMoviePosters] = useState([]);
-  const [ytInfo, setYtInfo] = useState([]);
+  const [spotifyInfo, setSpotifyInfo] = useState([]);
 
-  // 책 표지
+  // 1) 책 표지
   useEffect(() => {
     Promise.all(
       books.map(({ title, author }) =>
@@ -23,7 +24,7 @@ export default function Recommendations({ data }) {
     ).then(setBookCovers);
   }, [books]);
 
-  // 영화 포스터
+  // 2) 영화 포스터
   useEffect(() => {
     Promise.all(
       movies.map(({ title }) =>
@@ -35,25 +36,24 @@ export default function Recommendations({ data }) {
     ).then(setMoviePosters);
   }, [movies]);
 
-  // 유튜브 검색
+  // 3) 음악 (Spotify)
   useEffect(() => {
     Promise.all(
       music.map(({ title, artist }) =>
         axios
           .get(
-            `/api/youtube-search?title=${encodeURIComponent(
-              title
-            )}&artist=${encodeURIComponent(artist)}`
+            `/api/spotify-search?title=${encodeURIComponent(title)}` +
+              `&artist=${encodeURIComponent(artist)}`
           )
           .then((r) => r.data)
-          .catch(() => ({ videoId: null, thumbnail: null }))
+          .catch(() => ({ thumbnail: null, trackUrl: null }))
       )
-    ).then(setYtInfo);
+    ).then(setSpotifyInfo);
   }, [music]);
 
   return (
     <section className="recommendations">
-      {/* 책 */}
+      {/* 📚 책 */}
       <h3>📚 책</h3>
       <ul className="recommendation-list">
         {books.map((b, i) => (
@@ -74,7 +74,7 @@ export default function Recommendations({ data }) {
         ))}
       </ul>
 
-      {/* 영화 */}
+      {/* 🎬 영화 */}
       <h3>🎬 영화</h3>
       <ul className="recommendation-list">
         {movies.map((m, i) => (
@@ -95,34 +95,34 @@ export default function Recommendations({ data }) {
         ))}
       </ul>
 
-      {/* 음악: 여기만 music-list 클래스 */}
+      {/* 🎵 음악 */}
       <h3>🎵 음악</h3>
-      <ul className="recommendation-list music-list">
-        {music.map((s, i) => (
-          <li key={i} className="recommendation-item music-item">
-            {ytInfo[i]?.thumbnail && (
-              <a
-                href={`https://youtube.com/watch?v=${ytInfo[i].videoId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="music-link"
-              >
-                <div className="music-image-wrapper">
+      <ul className="recommendation-list horizontal">
+        {music.map((s, i) => {
+          const info = spotifyInfo[i] || {};
+          return (
+            <li key={i} className="recommendation-item horizontal-item">
+              {info.thumbnail && info.trackUrl && (
+                <a
+                  href={info.trackUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <img
-                    src={ytInfo[i].thumbnail}
+                    src={info.thumbnail}
                     alt={s.title}
                     className="recommend-image music-image"
                   />
-                </div>
-              </a>
-            )}
-            <div className="recommendation-text">
-              <strong className="recommend-title">{s.title}</strong>
-              <span className="recommend-meta">— {s.artist}</span>
-              {s.reason && <p className="recommend-reason">{s.reason}</p>}
-            </div>
-          </li>
-        ))}
+                </a>
+              )}
+              <div className="recommendation-text">
+                <strong className="recommend-title">{s.title}</strong>
+                <span className="recommend-meta">— {s.artist}</span>
+                {s.reason && <p className="recommend-reason">{s.reason}</p>}
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </section>
   );
