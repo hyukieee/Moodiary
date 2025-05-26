@@ -9,12 +9,8 @@ on:
 
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on:
-      - self-hosted   # 러너가 보여주는 label을 모두 나열하세요
-      - linux
-      - x64
-
+      - self-hosted
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
