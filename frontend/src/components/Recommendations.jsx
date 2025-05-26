@@ -26,7 +26,7 @@ export default function Recommendations({ data }) {
   }, [books]);
 
   // 영화 포스터 가져오기
-  useEffect(() => {
+  useEffect(() => { 
     Promise.all(
       movies.map(({ title }) =>
         axios
