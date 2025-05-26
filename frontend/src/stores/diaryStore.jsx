@@ -1,5 +1,5 @@
 // src/stores/diaryStore.js
-import create from "zustand";
+import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 const useDiaryStore = create(
@@ -15,14 +15,13 @@ const useDiaryStore = create(
 
       deleteEntry: (date) =>
         set((s) => {
-          // 원본을 건드리지 않고 복사본으로 삭제
           const next = { ...s.entries };
           delete next[date];
           return { entries: next };
         }),
     }),
     {
-      name: "diary-storage", // localStorage key
+      name: "diary-storage",
     }
   )
 );
