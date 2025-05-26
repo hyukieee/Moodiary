@@ -1,13 +1,14 @@
 services:
   nginx:
-    build:
-      context: ./proxy
-      dockerfile: Dockerfile
+    # 자동 빌드를 없애고, Hub에서 pull한 이미지를 바로 사용
+    image: hyukie/songdo:latest
+
     container_name: nginx-proxy
     ports:
       - "8080:80"
     networks:
       - dweb-network
+
 networks:
   dweb-network:
     driver: bridge
