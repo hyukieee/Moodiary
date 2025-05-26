@@ -20,7 +20,6 @@ export default function DiaryApp({ children }) {
       <main className="app-main">{children}</main>
 
       <footer className="app-footer">
-        <p>© 2025 정민혁의 일기 앱</p>
       </footer>
     </div>
   );
