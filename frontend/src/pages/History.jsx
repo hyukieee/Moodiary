@@ -9,7 +9,6 @@ export default function History() {
   const deleteEntry = useDiaryStore((s) => s.deleteEntry);
   const navigate = useNavigate();
 
-  // 6대 감정별 색상 맵 (영어 key)
   const COLOR_MAP = {
     Joy:      "#FFD54F",
     Sadness:  "#1E90FF",
@@ -19,7 +18,6 @@ export default function History() {
     Calm:     "#AED581",
   };
 
-  // 한글(label) → 영어 매핑
   const TRANSLATE = {
     기쁨:    "Joy",
     행복:    "Joy",
