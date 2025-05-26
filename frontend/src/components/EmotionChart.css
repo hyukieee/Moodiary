@@ -15,7 +15,7 @@
   }
   
   .emotion-label {
-    width: 90px;            /* 레이블 영역 너비 조정 */
+    width: 90px;           
     font-weight: 500;
   }
   
@@ -35,7 +35,7 @@
   }
   
   .emotion-value {
-    width: 40px;            /* 점수 표시 영역 */
+    width: 40px;            
     text-align: right;
     font-size: 0.9rem;
   }
