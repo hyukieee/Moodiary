@@ -1,15 +1,16 @@
 // frontend/src/components/Recommendations.jsx
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./Recommendations.css"; // 스타일 분리
+import "./Recommendations.css";
 
 export default function Recommendations({ data }) {
   const { books = [], movies = [], music = [] } = data;
   const [bookCovers, setBookCovers] = useState([]);
   const [moviePosters, setMoviePosters] = useState([]);
-  const [ytInfo, setYtInfo] = useState([]);
+  const [spInfo, setSpInfo] = useState([]);
 
-  // 책 표지 불러오기
+  // 책 표지 가져오기
   useEffect(() => {
     Promise.all(
       books.map(({ title, author }) =>
@@ -24,7 +25,7 @@ export default function Recommendations({ data }) {
     ).then(setBookCovers);
   }, [books]);
 
-  // 영화 포스터 불러오기
+  // 영화 포스터 가져오기
   useEffect(() => {
     Promise.all(
       movies.map(({ title }) =>
@@ -36,27 +37,27 @@ export default function Recommendations({ data }) {
     ).then(setMoviePosters);
   }, [movies]);
 
-  // 유튜브 검색
+  // 음악(SPOTIFY) 검색
   useEffect(() => {
     Promise.all(
       music.map(({ title, artist }) =>
         axios
           .get(
-            `/api/youtube-search?title=${encodeURIComponent(
+            `/api/spotify-search?title=${encodeURIComponent(
               title
             )}&artist=${encodeURIComponent(artist)}`
           )
           .then((r) => r.data)
-          .catch(() => ({ videoId: null, thumbnail: null }))
+          .catch(() => ({ trackUrl: null, thumbnail: null }))
       )
-    ).then(setYtInfo);
+    ).then(setSpInfo);
   }, [music]);
 
   return (
     <section className="recommendations">
       {/* 책 */}
       <h3>📚 책</h3>
-      <ul className="recommendation-list books">
+      <ul className="recommendation-list">
         {books.map((b, i) => (
           <li key={i} className="recommendation-item">
             {bookCovers[i] && (
@@ -69,9 +70,7 @@ export default function Recommendations({ data }) {
             <div className="recommendation-text">
               <strong className="recommend-title">{b.title}</strong>
               <span className="recommend-meta">— {b.author}</span>
-              {b.reason && (
-                <p className="recommend-reason">{b.reason}</p>
-              )}
+              {b.reason && <p className="recommend-reason">{b.reason}</p>}
             </div>
           </li>
         ))}
@@ -79,7 +78,7 @@ export default function Recommendations({ data }) {
 
       {/* 영화 */}
       <h3>🎬 영화</h3>
-      <ul className="recommendation-list movies">
+      <ul className="recommendation-list">
         {movies.map((m, i) => (
           <li key={i} className="recommendation-item">
             {moviePosters[i] && (
@@ -92,42 +91,40 @@ export default function Recommendations({ data }) {
             <div className="recommendation-text">
               <strong className="recommend-title">{m.title}</strong>
               <span className="recommend-meta">— {m.director}</span>
-              {m.reason && (
-                <p className="recommend-reason">{m.reason}</p>
-              )}
+              {m.reason && <p className="recommend-reason">{m.reason}</p>}
             </div>
           </li>
         ))}
       </ul>
 
-      {/* 음악 (가로 스크롤) */}
+      {/* 음악 */}
       <h3>🎵 음악</h3>
-      <ul className="recommendation-list music">
-        {music.map((s, i) => (
-          <li key={i} className="recommendation-item music-item">
-            {ytInfo[i]?.thumbnail && (
-              <a
-                href={`https://youtube.com/watch?v=${ytInfo[i].videoId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src={ytInfo[i].thumbnail}
-                  alt={s.title}
-                  className="recommend-image music-image"
-                />
-              </a>
-            )}
-            <div className="recommendation-text">
-              <strong className="recommend-title">
-                {s.title} — {s.artist}
-              </strong>
-              {s.reason && (
-                <p className="recommend-reason">{s.reason}</p>
+      <ul className="recommendation-list horizontal-music-list">
+        {music.map((s, i) => {
+          const info = spInfo[i] || {};
+          return (
+            <li key={i} className="recommendation-item horizontal-item">
+              {info.thumbnail && (
+                <a
+                  href={info.trackUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={info.thumbnail}
+                    alt={s.title}
+                    className="recommend-image"
+                  />
+                </a>
               )}
-            </div>
-          </li>
-        ))}
+              <div className="recommendation-text">
+                <strong className="recommend-title">{s.title}</strong>
+                <span className="recommend-meta">— {s.artist}</span>
+                {s.reason && <p className="recommend-reason">{s.reason}</p>}
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </section>
   );
