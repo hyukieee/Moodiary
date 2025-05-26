@@ -41,6 +41,6 @@ jobs:
       - name: Deploy via docker-compose
         run: |
           # 최신 이미지 받아오고
-          docker-compose pull
+          sudo docker-compose pull
           # 이전 컨테이너 떼어내고 새로 띄우기
-          docker-compose up -d --remove-orphans
+          sudo docker-compose up -d --remove-orphans
