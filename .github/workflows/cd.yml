@@ -3,8 +3,7 @@ name: CD → Deploy on Self-Hosted Runner
 
 on:
   workflow_run:
-    workflows:
-      - 'CI → Build & Publish Docker Image'
+    workflows: ['CI → Build & Publish Docker Image']
     types: 
       - completed
 

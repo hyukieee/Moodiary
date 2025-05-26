@@ -1,7 +1,7 @@
 name: CI – Build & Push Docker Image
 on:
   push:
-    branches: [ main ]
+    branches: [ master, main ]
 
 jobs:
   build-and-push:
