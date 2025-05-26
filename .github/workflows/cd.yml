@@ -1,7 +1,6 @@
-# .github/workflows/cd-deploy.yml
+# .github/workflows/cd-selfhosted.yml
 name: CD → Deploy on Self-Hosted Runner
 
-# CI 워크플로 이름(예: CI – Build & Push Docker Image)이 완료(completed)되면 트리거
 on:
   workflow_run:
     workflows: ["CI – Build & Push Docker Image"]
@@ -10,37 +9,27 @@ on:
 
 jobs:
   deploy:
-    # CI가 성공했을 때만
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    # Self-hosted 러너가 설치된 EC2에서 실행
     runs-on: self-hosted
 
     steps:
-      # 1) 코드 체크아웃
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2) (필요 시) docker-compose 설치 확인
-      #    EC2에 docker-compose 바이너리가 없으면 설치합니다.
       - name: Ensure docker-compose is installed
         run: |
           if ! command -v docker-compose >/dev/null 2>&1; then
-            echo "Installing docker-compose..."
             sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" \
               -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
-          else
-            echo "docker-compose already installed"
           fi
 
-      # 3) 배포 디렉토리로 이동 (docker-compose.yml이 있는 위치)
-      #    만약 EC2에서 별도로 /home/ubuntu/moodiary 에 프로젝트를 클론해 두셨다면
-      #    그 경로를 지정해주세요. 일반적으로 self-hosted 러너는
-      #    actions/checkout@v4 단계에서 자동으로 워크스페이스에
-      #    코드를 받아오기 때문에 ${GITHUB_WORKSPACE}를 그대로 쓰셔도 됩니다.
       - name: Deploy via docker-compose
+        # 이 디렉토리가 바로 actions/checkout 으로 받은 코드가 있는 곳
+        working-directory: ${{ github.workspace }}
         run: |
-          # 최신 이미지 받아오고
           sudo docker-compose pull
-          # 이전 컨테이너 떼어내고 새로 띄우기
           sudo docker-compose up -d --remove-orphans
+
+      - name: Deployment complete
+        run: echo "✅ Deployed on self-hosted runner"
