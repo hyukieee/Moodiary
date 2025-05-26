@@ -8,8 +8,7 @@ on:
       - completed
 
 jobs:
-  deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  build: 
     runs-on: self-hosted
 
     steps:
