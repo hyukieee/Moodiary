@@ -1,36 +1,38 @@
-# .github/workflows/cd-selfhosted.yml
 name: CD → Deploy on Self-Hosted Runner
 
 on:
   workflow_run:
-    workflows: ["CI – Build & Push Docker Image"]
+    workflows:
+      - 'CI – Build & Push Docker Image'   # ← 위 CI name과 똑같이!
     types:
       - completed
 
 jobs:
   deploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    runs-on: self-hosted
+    runs-on:
+      - self-hosted   # 러너가 보여주는 label을 모두 나열하세요
+      - linux
+      - x64
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-
       - name: Stop & remove old container
         run: |
-          sudo docker rm -f nginx-proxy || true
+          docker rm -f nginx-proxy || true
 
       - name: Pull new image
         run: |
-          sudo docker pull hyukie/songdo:latest
+          docker pull hyukie/songdo:latest
 
       - name: Run container
         run: |
-          sudo docker run -d \
+          docker run -d \
             --name nginx-proxy \
             -p 8080:80 \
             hyukie/songdo:latest
 
       - name: Deployment complete
-        run: echo "✅ Deployed hyukie/songdo:latest to self-hosted runner"
+        run: echo "✅ Deployed hyukie/songdo:latest"
