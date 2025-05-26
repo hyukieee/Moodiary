@@ -98,7 +98,7 @@ export default function Recommendations({ data }) {
 
       {/* 🎵 음악 섹션 (Spotify) */}
       <h3>🎵 음악</h3>
-      <ul className="recommendation-list horizontal"> 
+      <ul className="recommendation-list horizontal">
         {music.map((s, i) => {
           const info = spotifyInfo[i] || {};
           return (
