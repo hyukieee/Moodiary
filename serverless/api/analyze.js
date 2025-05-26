@@ -46,7 +46,6 @@ export default async function handler(req, res) {
 7) 실제 존재하는 다음 추천 (API 메타데이터 포함)
     - 주제와 관련된 것들 중 책은 베스트 셀러, 영화는 관객수가 많은, 음악은 유명한 곡을 추천할 것
     - 실제로 존재하는 콘텐츠만 추천하고, 지어내지 말 것
-    • 책, 영화는 각각 한국 콘텐츠 1개 이상 추천
    • books (2) → { title, author, isbn, reason }
    • movies (2) → { title, director, tmdb_id, reason }
    • music (2) → { title, artist, spotify_id, reason }

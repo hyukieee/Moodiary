@@ -1,16 +1,14 @@
-// frontend/src/components/Recommendations.jsx
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./Recommendations.css";
+import "./Recommendations.css"; // 스타일 분리
 
 export default function Recommendations({ data }) {
   const { books = [], movies = [], music = [] } = data;
   const [bookCovers, setBookCovers] = useState([]);
   const [moviePosters, setMoviePosters] = useState([]);
-  const [spotifyInfo, setSpotifyInfo] = useState([]);
+  const [ytInfo, setYtInfo] = useState([]);
 
-  // 1) 책 표지 가져오기
+  // 책 표지
   useEffect(() => {
     Promise.all(
       books.map(({ title, author }) =>
@@ -25,7 +23,7 @@ export default function Recommendations({ data }) {
     ).then(setBookCovers);
   }, [books]);
 
-  // 2) 영화 포스터 가져오기
+  // 영화 포스터
   useEffect(() => {
     Promise.all(
       movies.map(({ title }) =>
@@ -37,24 +35,25 @@ export default function Recommendations({ data }) {
     ).then(setMoviePosters);
   }, [movies]);
 
-  // 3) 음악 (Spotify) 검색
+  // 유튜브 검색
   useEffect(() => {
     Promise.all(
       music.map(({ title, artist }) =>
         axios
           .get(
-            `/api/spotify-search?title=${encodeURIComponent(title)}` +
-              `&artist=${encodeURIComponent(artist)}`
+            `/api/youtube-search?title=${encodeURIComponent(
+              title
+            )}&artist=${encodeURIComponent(artist)}`
           )
           .then((r) => r.data)
-          .catch(() => ({ thumbnail: null, trackUrl: null }))
+          .catch(() => ({ videoId: null, thumbnail: null }))
       )
-    ).then(setSpotifyInfo);
+    ).then(setYtInfo);
   }, [music]);
 
   return (
     <section className="recommendations">
-      {/* 📚 책 섹션 */}
+      {/* 책 */}
       <h3>📚 책</h3>
       <ul className="recommendation-list">
         {books.map((b, i) => (
@@ -75,7 +74,7 @@ export default function Recommendations({ data }) {
         ))}
       </ul>
 
-      {/* 🎬 영화 섹션 */}
+      {/* 영화 */}
       <h3>🎬 영화</h3>
       <ul className="recommendation-list">
         {movies.map((m, i) => (
@@ -96,34 +95,34 @@ export default function Recommendations({ data }) {
         ))}
       </ul>
 
-      {/* 🎵 음악 섹션 (Spotify) */}
+      {/* 음악: 여기만 music-list 클래스 */}
       <h3>🎵 음악</h3>
-      <ul className="recommendation-list horizontal">
-        {music.map((s, i) => {
-          const info = spotifyInfo[i] || {};
-          return (
-            <li key={i} className="recommendation-item horizontal-item">
-              {info.thumbnail && info.trackUrl && (
-                <a
-                  href={info.trackUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+      <ul className="recommendation-list music-list">
+        {music.map((s, i) => (
+          <li key={i} className="recommendation-item music-item">
+            {ytInfo[i]?.thumbnail && (
+              <a
+                href={`https://youtube.com/watch?v=${ytInfo[i].videoId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="music-link"
+              >
+                <div className="music-image-wrapper">
                   <img
-                    src={info.thumbnail}
+                    src={ytInfo[i].thumbnail}
                     alt={s.title}
-                    className="recommend-image"
+                    className="recommend-image music-image"
                   />
-                </a>
-              )}
-              <div className="recommendation-text">
-                <strong className="recommend-title">{s.title}</strong>
-                <span className="recommend-meta">— {s.artist}</span>
-                {s.reason && <p className="recommend-reason">{s.reason}</p>}
-              </div>
-            </li>
-          );
-        })}
+                </div>
+              </a>
+            )}
+            <div className="recommendation-text">
+              <strong className="recommend-title">{s.title}</strong>
+              <span className="recommend-meta">— {s.artist}</span>
+              {s.reason && <p className="recommend-reason">{s.reason}</p>}
+            </div>
+          </li>
+        ))}
       </ul>
     </section>
   );
