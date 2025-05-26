@@ -3,7 +3,6 @@ import React from "react";
 import "./EmotionChart.css";
 
 export default function EmotionChart({ data }) {
-  // data: [{ label: "기쁨 😊", score: 0.64 }, …]
   return (
     <section className="emotion-chart">
       <h3>📊 감정 점수</h3>
