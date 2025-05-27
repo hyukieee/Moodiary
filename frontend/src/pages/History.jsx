@@ -60,8 +60,7 @@ export default function History() {
               <button
                 onClick={() => {
                   deleteEntry(date);
-                  // 필요하다면 삭제 후 리다이렉트
-                  // navigate("/", { replace: true });
+                  
                 }}
               >
                 삭제

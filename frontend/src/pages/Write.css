@@ -1,6 +1,5 @@
 /* frontend/src/pages/Write.css */
 
-/* 일기 작성 페이지 전체를 감싸는 컨테이너 */
 .write-page {
     display: flex;
     justify-content: center;    /* 가운데 정렬 */

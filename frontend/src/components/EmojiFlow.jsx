@@ -2,7 +2,6 @@
 import React from "react";
 
 export default function EmojiFlow({ flow }) {
-  // flow: [{ emoji: "🚶", text: "공원 산책" }, …]
   return (
     <section>
       <h3>😊 감정 흐름</h3>

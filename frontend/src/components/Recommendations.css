@@ -46,7 +46,6 @@
   margin: 0.5rem 0 0;
 }
 
-/* 음악만 가로 스크롤 */
 .recommendation-list.horizontal {
   display: flex;
   gap: 1rem;
@@ -58,7 +57,6 @@
 }
 
 
-/* 기존 스타일 그대로 두시고, 아래만 추가 */
 
 .music-list {
   display: flex;
@@ -73,10 +71,9 @@
   gap: 1rem;
 }
 
-/* 썸네일을 감싸는 wrapper에 정사각 비율 강제 */
 .music-image-wrapper {
-  width: 120px;   /* 원하는 크기로 조정 */
-  height: 120px;  /* width와 동일하게 맞춰야 1:1 */
+  width: 120px;   
+  height: 120px;  
   overflow: hidden;
   border-radius: 8px;
   flex-shrink: 0;
@@ -84,9 +81,9 @@
 
 /* 실제 이미지에는 object-fit: cover */
 .music-image {
-  width: 150px;       /* 원하는 크기(px) */
-  height: 150px;      /* 너비와 동일하게 */
+  width: 150px;       
+  height: 150px;      
   object-fit: cover;  /* 이미지가 찌그러지지 않고 잘라내기 */
   border-radius: 8px; /* 동일하게 라운드 */
-  margin-right: 1rem; /* 텍스트와 간격 */
+  margin-right: 1rem; 
 }
